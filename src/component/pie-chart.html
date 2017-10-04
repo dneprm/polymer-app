@@ -1,0 +1,89 @@
+
+<dom-module id="pie-chart">
+<template>
+         <style>
+            :host {
+                display: block;
+                text-align: center;
+                height: 400px;
+            }
+            .controls {
+              display: inline-block;
+              margin: 0 0 0 20px;
+            }
+            svg {
+              margin: 0 auto;
+            }
+        </style>
+        <svg id="svg" width="600" height="500"></svg>
+    </template>
+  <script>
+    Polymer({
+      is: "pie-chart",
+      attached: function() {
+        var storedData = JSON.parse(localStorage.getItem('ajaxData'));
+        /*var chartData = [],
+            tempObj = {};
+
+            storedData.map(function(item) {
+              if(tempObj.hasOwnProperty(item.gender)) {
+                tempObj[item.gender]++;
+              } else {
+                tempObj[item.gender]=1;
+              }
+            });
+            for(var key in tempObj) {
+              chartData.push({
+                'gender': key,
+                'amount': tempObj[key]
+              })
+            }*/
+      
+        var width = 360;
+        var height = 360;
+        var radius = Math.min(width, height) / 2;
+        var color = d3.scaleOrdinal(d3.schemeCategory20b);
+        var svg = d3.select('#svg')
+          .attr('width', width)
+          .attr('height', height)
+          .append('g')
+          .attr('transform', 'translate(' + (width / 2) +
+            ',' + (height / 2) + ')');
+        var  g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+        var arc = d3.arc()
+          .innerRadius(0)
+          .outerRadius(radius);
+        var pie = d3.pie()
+          .value(function(d) { return d.amount; })
+          .sort(null);
+        var label = d3.arc()
+            .outerRadius(radius - 30)
+            .innerRadius(radius - 100);
+        var path = svg.selectAll('path')
+          .data(pie(storedData))
+          .enter()
+          .append('path')
+          .attr('d', arc)
+          .attr('fill', function(d) {
+            return color(d.data.gender);
+          });
+        var arc1 = svg.selectAll("arc")
+            .data(pie(storedData))
+            .enter().append("g")
+            .attr("class", "arc");
+        
+        arc1.append("text")
+        .attr("class", "text")
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {return "translate(" + label.centroid(d) + ")"; })
+        .attr("dy", "0.35em")
+        .text(function (d) {return d.data.gender; })          
+      }, 
+      ready: function() {
+
+      }
+    });
+
+  </script>
+  
+</dom-module>

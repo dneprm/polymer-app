@@ -1,0 +1,28 @@
+{
+  "name": "polymer-app",
+  "authors": [
+    "dneprm <turkomariya@gmail.com>"
+  ],
+  "description": "polymer app with fetching data and displaying it in the table and 3d charts",
+  "main": "",
+  "keywords": [
+    "polymer",
+    "3g"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "4",
+    "app-route": "PolymerElements/app-route#^2.0.2",
+    "iron-ajax": "polymerelements/iron-ajax#^2.0.5",
+    "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
+    "polymer": "1.9.3"
+  }
+}

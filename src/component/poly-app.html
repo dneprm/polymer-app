@@ -1,0 +1,145 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+
+
+<link rel="import" href="chart-pages.html">
+
+<dom-module id="poly-app">
+	<style>
+		table {
+			width: 100%;
+		}
+		table, th, td {
+		    border: 1px solid #eee;
+		    border-collapse: collapse;
+		    text-align: left;
+		}
+		table tr:nth-child(even) {
+		    background-color: #eee;
+		}
+		table tr:nth-child(odd) {
+		    background-color: #fff;
+		}
+		:host {
+	        display: block;
+	      }
+	      a {
+	        color: black;
+	        text-decoration: none;
+	        margin-right: 8px;
+	        font-size: 18px;
+	      }
+	      .iron-selected {
+	        text-decoration: underline;
+	      }
+	      nav {
+	        height: 20px;
+    		margin: 20px auto;
+	        text-align: right;
+	      }
+	      main {
+	        width: 900px;
+	        margin: 0 auto;
+	        font-size: 21px;
+	        font-family: Georgia;
+	      }
+	      h2 {
+	        font-family: sans-serif;
+	      }
+	</style>
+	<template>
+		<h1>Polymer App</h1>
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>Gender</th>
+				<th>Nationality</th>
+			</tr>
+			<template is="dom-repeat" items="{{data}}">
+				<tr>
+					<td>{{item.name.last}}</td>
+					<td>{{item.gender}}</td>
+					<td>{{item.nat}}</td>
+				</tr>
+			</template>
+		</table>
+		<iron-ajax 
+		    
+		    id="requestData"
+		    url="https://randomuser.me/api/"
+		    params='{"results": "20", "inc": "name,gender,nat"}'
+		    handle-as="json"
+		    on-response="handleResponse"></iron-ajax>
+
+		<app-location route="{{route}}" use-hash-as-path></app-location>
+
+	    <app-route route="{{route}}"
+	                  pattern="/:category"
+	                  data="{{categoryData}}"
+	                  tail="{{categoryTail}}"></app-route>
+
+	    <nav>
+	      <iron-selector selected="[[categoryData.category]]" attr-for-selected="data-page">
+	        <a data-page="chart-one" href="#/chart-one">Chart1</a>
+	        <a data-page="chart-two" href="#/chart-two">Chart2</a>
+	      </iron-selector>
+	    </nav>
+
+	    <main>
+	      <chart-pages route="{{categoryTail}}"
+	                  category="{{categoryData.category}}"
+	                  ></chart-pages>
+	    </main>
+
+	</template>
+	<script>
+		Polymer({
+			is: "poly-app",
+			properties: {
+				data: {
+					type: Array
+				}
+			},
+			ready: function() {
+		        this.$.requestData.generateRequest();
+			},
+			handleResponse: function(data) {
+				this.data = data.detail.response.results;
+
+				var chartData = [],
+		            tempObj = {};
+
+		            this.data.map(function(item) {
+		              if(tempObj.hasOwnProperty(item.gender)) {
+		                tempObj[item.gender]++;
+		              } else {
+		                tempObj[item.gender]=1;
+		              }
+		            });
+		            for(var key in tempObj) {
+		              chartData.push({
+		                'gender': key,
+		                'amount': tempObj[key]
+		              })
+		            }
+
+				localStorage.setItem('ajaxData', JSON.stringify(chartData));
+			},
+			observers: [
+	         '_updateScroll(route)'
+	        ],
+	        attached: function() {
+	          if (!this.route.path) {
+	            this.set('route.path', '/chart-one');
+	          }
+	        },
+	        _updateScroll: function() {
+	          window.scroll(0, 0);
+	        }
+		});
+
+	</script>
+</dom-module>

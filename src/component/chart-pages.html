@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<link rel="import" href="./chart-one.html">
+<link rel="import" href="./chart-two.html">
+
+<dom-module id="chart-pages">
+
+  <template>
+
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-route route="{{route}}"
+               pattern="/chart-one"
+               active="{{chartOneActive}}"></app-route>
+
+    <app-route route="{{route}}"
+               pattern="/chart-two"
+               active="{{chartTwoActive}}"
+               ></app-route>
+
+    <chart-one 
+               active="{{chartOneActive}}"
+               loading="{{isLoading}}"></chart-one>
+
+    <chart-two 
+               active="{{chartTwoActive}}"
+               loading="{{isLoading}}"></chart-two>
+
+    
+  </template>
+
+  <script>
+    Polymer({
+      is: 'chart-pages'
+    });
+  </script>
+
+</dom-module>

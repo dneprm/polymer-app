@@ -1,0 +1,37 @@
+<link rel="import" href="./pie-chart.html">
+
+<dom-module id="chart-one">
+<style>
+      :host {
+        display: block;
+      }
+      :host([active]) {
+        display: block;
+      }
+      h3 {
+      	text-align: center;
+      }
+    </style>
+   <template>
+   		<h3>Chart 1 "Gender division"</h3>
+	    <pie-chart></pie-chart>
+  </template>
+  <script>
+		Polymer({
+			is: "chart-one",
+			properties: {
+		        active: {
+		          type: Boolean,
+		          value: false,
+		          reflectToAttribute: true
+		        },
+		        loading: {
+		          type: Boolean,
+		          value: false,
+		          notify: true
+		        }
+		      }
+		});
+
+	</script>
+</dom-module>
